@@ -1,0 +1,26 @@
+# Maven wrapper
+/mvnw text eol=lf
+/mvnw.cmd text eol=crlf
+*.cmd text eol=crlf
+
+# Java
+*.java text
+
+# HTML, CSS, JS
+*.html text
+*.css text
+*.js text
+*.jsx text
+
+# JSON
+*.json text
+
+# SQL
+*.sql text
+
+# Otros binarios (imágenes, etc.)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

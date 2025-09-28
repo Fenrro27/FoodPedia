@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  # --- Base de datos PostgreSQL ---
+  db:
+    image: postgres:15
+    container_name: recetas-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: recetas
+    volumes:
+      - ./db/data:/var/lib/postgresql/data          # Persistencia local
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  # Script inicial
+    ports:
+      - "5432:5432"
+
+  # --- Backend Spring Boot ---
+  backend:
+    build: ./backend
+    container_name: recetas-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/recetas
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app  # Opcional: para desarrollo local y hot reload
+    command: ["./mvnw", "spring-boot:run"]
+
+  # --- Frontend React ---
+  frontend:
+    build: ./frontend
+    container_name: recetas-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+    command: ["npm", "start"]
+
+# --- Volúmenes opcionales (para producción limpia) ---
+volumes:
+  postgres_data:
